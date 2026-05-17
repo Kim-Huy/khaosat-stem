@@ -85,7 +85,9 @@ import {
 
 getFirestore,
 collection,
-onSnapshot
+onSnapshot,
+query,
+orderBy
 
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
@@ -162,18 +164,24 @@ const questionTexts = [
 const container =
 document.getElementById('data');
 
-onSnapshot(
+const q = query(
 
 collection(db,"submissions"),
 
-(snapshot)=>{
+orderBy(
+"submittedAt",
+"desc"
+)
+
+);
+
+onSnapshot(q,(snapshot)=>{
 
 container.innerHTML='';
 
 snapshot.forEach((doc)=>{
 
-const item =
-doc.data();
+const item = doc.data();
 
 let answersHTML='';
 
@@ -248,6 +256,7 @@ ${answersHTML}
 
 </div>
 `;
+
 });
 
 });
