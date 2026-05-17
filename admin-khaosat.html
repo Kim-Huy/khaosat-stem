@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Admin STEM</title>
+
+<style>
+
+body{
+
+    font-family:Arial;
+
+    background:#020617;
+
+    color:white;
+
+    padding:30px;
+}
+
+h1{
+
+    text-align:center;
+
+    color:#60a5fa;
+
+    margin-bottom:30px;
+}
+
+.card{
+
+    background:#111827;
+
+    padding:25px;
+
+    border-radius:16px;
+
+    margin-bottom:30px;
+}
+
+.answer{
+
+    background:#1e293b;
+
+    padding:15px;
+
+    border-radius:12px;
+
+    margin-top:15px;
+}
+
+.questionTitle{
+
+    color:#93c5fd;
+
+    margin-bottom:8px;
+}
+
+.answerText{
+
+    color:#e2e8f0;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>ADMIN KHẢO SÁT STEM</h1>
+
+<div id="data"></div>
+
+<script>
+
+const questionTexts = [
+
+"Bạn từng dùng công nghệ nào?",
+"Bạn từng dùng cảm biến nào?",
+"Bạn từng làm project gì?",
+"Bạn từng dùng motor nào?",
+"Bạn thường debug bằng gì?",
+"Bạn từng dùng giao tiếp nào?",
+"Bạn thích mảng nào?",
+"Bạn từng làm website chưa?",
+"Bạn từng dùng AI chưa?",
+"Bạn từng fail project chưa?",
+"Bạn từng hàn mạch chưa?",
+"Bạn từng đọc datasheet chưa?",
+"Bạn từng tham gia cuộc thi nào?",
+"Bạn học công nghệ bằng gì?",
+"Bạn thích hardware hay software?",
+"Bạn từng làm robot chưa?",
+"Điều khó nhất khi làm project?",
+"Bạn từng dùng phần mềm nào?",
+"Bạn muốn học thêm gì?",
+"Điều khiến bạn thích STEM?",
+
+"Project bạn tự hào nhất?",
+"Bug khó nhất bạn từng gặp?",
+"Bạn đã fix bug đó như thế nào?",
+"Bạn từng thất bại project nào?",
+"Bạn học được gì từ thất bại đó?",
+"Bạn muốn làm project gì trong tương lai?",
+"Theo bạn kỹ năng quan trọng nhất khi làm STEM là gì?",
+"Bạn muốn học thêm gì trong CLB?",
+"Điều khó nhất khi làm project thực tế là gì?",
+"Bạn từng tự học công nghệ mới như thế nào?",
+"Bạn thích teamwork hay làm cá nhân? Vì sao?",
+"Nếu có đủ kinh phí bạn sẽ làm project gì?",
+"Bạn nghĩ điều gì tạo nên một team STEM mạnh?",
+"Mục tiêu của bạn khi tham gia CLB STEM?",
+"Góp ý của bạn dành cho CLB STEM?"
+
+];
+
+async function loadData(){
+
+    const response =
+    await fetch('/api/submissions');
+
+    const data =
+    await response.json();
+
+    const container =
+    document.getElementById('data');
+
+    container.innerHTML = '';
+
+    data.reverse().forEach(item=>{
+
+        let answersHTML = '';
+
+        for(let i=1;i<=20;i++){
+
+            answersHTML += `
+
+            <div class="answer">
+
+            <div class="questionTitle">
+
+            Câu ${i}: ${questionTexts[i-1]}
+
+            </div>
+
+            <div class="answerText">
+
+            ${item.answers[`q${i}`]?.join(', ') || 'Không trả lời'}
+
+            </div>
+
+            </div>
+            `;
+        }
+
+        for(let i=21;i<=35;i++){
+
+    answersHTML += `
+
+    <div class="answer">
+
+    <div class="questionTitle">
+
+    Câu ${i}: ${questionTexts[i-1]}
+
+    </div>
+
+    <div class="answerText">
+
+    ${
+        item.answers[`q${i}`]
+        ?
+        item.answers[`q${i}`]
+        :
+        'Không trả lời'
+    }
+
+    </div>
+
+    </div>
+    `;
+}
+
+        container.innerHTML += `
+
+        <div class="card">
+
+        <h2>${item.name}</h2>
+
+        <p>Lớp: ${item.className}</p>
+
+        <p>Thời gian:
+        ${item.submittedAt}</p>
+
+        ${answersHTML}
+
+        </div>
+        `;
+    });
+}
+
+loadData();
+
+setInterval(()=>{
+
+    loadData();
+
+},2000);
+
+</script>
+
+</body>
+</html>

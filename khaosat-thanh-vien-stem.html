@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Khảo Sát Thành Viên STEM</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial;
+    background:#020617;
+    color:white;
+    overflow-x:hidden;
+}
+
+/* GALAXY */
+
+.space{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+
+    background:
+    radial-gradient(circle at 20% 20%, rgba(59,130,246,0.35), transparent 25%),
+    radial-gradient(circle at 80% 30%, rgba(168,85,247,0.25), transparent 30%),
+    radial-gradient(circle at 50% 80%, rgba(14,165,233,0.2), transparent 35%),
+    linear-gradient(
+        to bottom,
+        #020617 0%,
+        #030712 40%,
+        #000000 100%
+    );
+
+    z-index:-3;
+}
+
+.stars{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background-image:
+    radial-gradient(2px 2px at 20px 30px, white, transparent),
+    radial-gradient(2px 2px at 100px 80px, #93c5fd, transparent),
+    radial-gradient(2px 2px at 200px 150px, white, transparent);
+
+    background-repeat:repeat;
+    background-size:1200px 800px;
+
+    animation:
+    twinkle 5s ease-in-out infinite;
+
+    z-index:-2;
+}
+
+@keyframes twinkle{
+
+    0%{
+        opacity:0.4;
+    }
+
+    50%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:0.4;
+    }
+}
+
+/* CONTENT */
+
+.container{
+
+    max-width:1000px;
+
+    margin:auto;
+
+    padding:40px 20px;
+}
+
+h1{
+
+    text-align:center;
+
+    color:#60a5fa;
+
+    margin-bottom:10px;
+}
+
+.desc{
+
+    text-align:center;
+
+    color:#cbd5e1;
+
+    margin-bottom:40px;
+}
+
+.question{
+
+    background:rgba(15,23,42,0.8);
+
+    padding:25px;
+
+    border-radius:18px;
+
+    margin-bottom:25px;
+
+    border:1px solid rgba(255,255,255,0.08);
+}
+
+.question h3{
+
+    margin-bottom:15px;
+
+    color:#93c5fd;
+}
+
+label{
+
+    display:block;
+
+    margin-top:12px;
+}
+
+textarea,
+input[type="text"]{
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    margin-top:12px;
+
+    background:#1e293b;
+
+    color:white;
+}
+
+textarea{
+
+    min-height:120px;
+}
+
+button{
+
+    width:100%;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:linear-gradient(
+        90deg,
+        #2563eb,
+        #7c3aed
+    );
+
+    color:white;
+
+    font-size:17px;
+
+    cursor:pointer;
+}
+
+/* POPUP */
+
+.popup{
+
+    position:fixed;
+
+    top:30px;
+    right:30px;
+
+    background:#111827;
+
+    padding:18px 25px;
+
+    border-radius:14px;
+
+    border-left:5px solid #ef4444;
+
+    box-shadow:
+    0 0 20px rgba(0,0,0,0.5);
+
+    transform:translateX(400px);
+
+    transition:0.4s;
+
+    z-index:9999;
+}
+
+.popup.show{
+
+    transform:translateX(0px);
+}
+
+.popup.success{
+
+    border-left:5px solid #22c55e;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="space"></div>
+<div class="stars"></div>
+
+<div class="container">
+
+<h1>KHẢO SÁT THÀNH VIÊN STEM</h1>
+
+<p class="desc">
+Đánh giá năng lực thực tế và trải nghiệm công nghệ
+</p>
+
+<div class="question">
+
+<h3>Thông tin thành viên</h3>
+
+<input
+type="text"
+id="name"
+placeholder="Họ và tên"
+>
+
+<input
+type="text"
+id="className"
+placeholder="Lớp"
+>
+
+</div>
+
+<div id="questions"></div>
+
+<!-- =========================
+     TỰ LUẬN
+========================= -->
+
+<div class="question">
+<h3>21. Project bạn tự hào nhất?</h3>
+<textarea id="q21"></textarea>
+</div>
+
+<div class="question">
+<h3>22. Bug khó nhất bạn từng gặp?</h3>
+<textarea id="q22"></textarea>
+</div>
+
+<div class="question">
+<h3>23. Bạn đã fix bug đó như thế nào?</h3>
+<textarea id="q23"></textarea>
+</div>
+
+<div class="question">
+<h3>24. Bạn từng thất bại project nào?</h3>
+<textarea id="q24"></textarea>
+</div>
+
+<div class="question">
+<h3>25. Bạn học được gì từ thất bại đó?</h3>
+<textarea id="q25"></textarea>
+</div>
+
+<div class="question">
+<h3>26. Bạn muốn làm project gì trong tương lai?</h3>
+<textarea id="q26"></textarea>
+</div>
+
+<div class="question">
+<h3>27. Theo bạn kỹ năng quan trọng nhất khi làm STEM là gì?</h3>
+<textarea id="q27"></textarea>
+</div>
+
+<div class="question">
+<h3>28. Bạn muốn học thêm gì trong CLB?</h3>
+<textarea id="q28"></textarea>
+</div>
+
+<div class="question">
+<h3>29. Điều khó nhất khi làm project thực tế là gì?</h3>
+<textarea id="q29"></textarea>
+</div>
+
+<div class="question">
+<h3>30. Bạn từng tự học công nghệ mới như thế nào?</h3>
+<textarea id="q30"></textarea>
+</div>
+
+<div class="question">
+<h3>31. Bạn thích teamwork hay làm cá nhân? Vì sao?</h3>
+<textarea id="q31"></textarea>
+</div>
+
+<div class="question">
+<h3>32. Nếu có đủ kinh phí bạn sẽ làm project gì?</h3>
+<textarea id="q32"></textarea>
+</div>
+
+<div class="question">
+<h3>33. Bạn nghĩ điều gì tạo nên một team STEM mạnh?</h3>
+<textarea id="q33"></textarea>
+</div>
+
+<div class="question">
+<h3>34. Mục tiêu của bạn khi tham gia CLB STEM?</h3>
+<textarea id="q34"></textarea>
+</div>
+
+<div class="question">
+<h3>35. Góp ý của bạn dành cho CLB STEM?</h3>
+<textarea id="q35"></textarea>
+</div>
+
+<button onclick="submitSurvey()">
+NỘP KHẢO SÁT
+</button>
+
+</div>
+
+<div id="popup" class="popup"></div>
+
+<script src="khaosat.js"></script>
+
+</body>
+</html>
