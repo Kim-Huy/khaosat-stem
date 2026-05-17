@@ -339,8 +339,7 @@ async function submitSurvey(){
             answers,
 
             submittedAt:
-            new Date()
-            .toLocaleString()
+            Date.now()
 
         });
 
