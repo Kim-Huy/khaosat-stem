@@ -76,7 +76,45 @@ h1{
 
 <div id="data"></div>
 
-<script>
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+
+getFirestore,
+collection,
+onSnapshot
+
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyB7UOCfnM3Y1MPDUv6Q5vAXMwokGV5lMKM",
+
+authDomain: "khaosat-stem.firebaseapp.com",
+
+projectId: "khaosat-stem",
+
+storageBucket: "khaosat-stem.firebasestorage.app",
+
+messagingSenderId: "985737529748",
+
+appId: "1:985737529748:web:5aee9dc96980f7c306e781"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+/* QUESTIONS */
 
 const questionTexts = [
 
@@ -119,98 +157,100 @@ const questionTexts = [
 
 ];
 
-async function loadData(){
+/* REALTIME */
 
-    const response =
-    await fetch('/api/submissions');
+const container =
+document.getElementById('data');
 
-    const data =
-    await response.json();
+onSnapshot(
 
-    const container =
-    document.getElementById('data');
+collection(db,"submissions"),
 
-    container.innerHTML = '';
+(snapshot)=>{
 
-    data.reverse().forEach(item=>{
+container.innerHTML='';
 
-        let answersHTML = '';
+snapshot.forEach((doc)=>{
 
-        for(let i=1;i<=20;i++){
+const item =
+doc.data();
 
-            answersHTML += `
+let answersHTML='';
 
-            <div class="answer">
+/* TRẮC NGHIỆM */
 
-            <div class="questionTitle">
+for(let i=1;i<=20;i++){
 
-            Câu ${i}: ${questionTexts[i-1]}
+answersHTML += `
 
-            </div>
+<div class="answer">
 
-            <div class="answerText">
+<div class="questionTitle">
 
-            ${item.answers[`q${i}`]?.join(', ') || 'Không trả lời'}
+Câu ${i}: ${questionTexts[i-1]}
 
-            </div>
+</div>
 
-            </div>
-            `;
-        }
+<div class="answerText">
 
-        for(let i=21;i<=35;i++){
-
-    answersHTML += `
-
-    <div class="answer">
-
-    <div class="questionTitle">
-
-    Câu ${i}: ${questionTexts[i-1]}
-
-    </div>
-
-    <div class="answerText">
-
-    ${
-        item.answers[`q${i}`]
-        ?
-        item.answers[`q${i}`]
-        :
-        'Không trả lời'
-    }
-
-    </div>
-
-    </div>
-    `;
+${
+item.answers[`q${i}`]?.join(', ')
+||
+'Không trả lời'
 }
 
-        container.innerHTML += `
+</div>
 
-        <div class="card">
-
-        <h2>${item.name}</h2>
-
-        <p>Lớp: ${item.className}</p>
-
-        <p>Thời gian:
-        ${item.submittedAt}</p>
-
-        ${answersHTML}
-
-        </div>
-        `;
-    });
+</div>
+`;
 }
 
-loadData();
+/* TỰ LUẬN */
 
-setInterval(()=>{
+for(let i=21;i<=35;i++){
 
-    loadData();
+answersHTML += `
 
-},2000);
+<div class="answer">
+
+<div class="questionTitle">
+
+Câu ${i}: ${questionTexts[i-1]}
+
+</div>
+
+<div class="answerText">
+
+${
+item.answers[`q${i}`]
+||
+'Không trả lời'
+}
+
+</div>
+
+</div>
+`;
+}
+
+container.innerHTML += `
+
+<div class="card">
+
+<h2>${item.name}</h2>
+
+<p>Lớp: ${item.className}</p>
+
+<p>Thời gian:
+${item.submittedAt}</p>
+
+${answersHTML}
+
+</div>
+`;
+});
+
+});
 
 </script>
 
