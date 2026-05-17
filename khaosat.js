@@ -284,6 +284,8 @@ async function submitSurvey(){
     .value
     .trim();
 
+    /* CHECK */
+
     if(!name || !className){
 
         showPopup(
@@ -325,43 +327,69 @@ async function submitSurvey(){
 
     try{
 
-        const response =
-        await fetch('/submit',{
+        await addDoc(
+        collection(
+            db,
+            "submissions"
+        ),
+        {
 
-            method:'POST',
+            name,
+            className,
+            answers,
 
-            headers:{
-                'Content-Type':
-                'application/json'
-            },
+            submittedAt:
+            new Date()
+            .toLocaleString()
 
-            body:JSON.stringify({
-
-                name,
-                className,
-                answers
-            })
         });
 
-        const result =
-        await response.json();
+        showPopup(
+            'Nộp khảo sát thành công',
+            'success'
+        );
 
-        if(result.success){
+        /* RESET */
 
-            showPopup(
-                'Nộp khảo sát thành công',
-                'success'
-            );
+        document
+        .getElementById('name')
+        .value='';
 
-        }else{
+        document
+        .getElementById('className')
+        .value='';
 
-            showPopup(
-                result.message,
-                'error'
-            );
-        }
+        document
+        .querySelectorAll('textarea')
+        .forEach(t=>t.value='');
+
+        document
+        .querySelectorAll(
+            'input[type="checkbox"]'
+        )
+        .forEach(c=>c.checked=false);
+
+        document
+        .querySelectorAll(
+            'input[type="text"]'
+        )
+        .forEach(input=>{
+
+            if(
+            input.id.includes(
+                'otherInput'
+            )
+            ){
+
+                input.value='';
+
+                input.style.display='none';
+            }
+        });
 
     }catch(error){
+
+        console.log(error);
 
         showPopup(
             'Có lỗi xảy ra',
