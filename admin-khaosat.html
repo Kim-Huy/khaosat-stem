@@ -250,7 +250,12 @@ container.innerHTML += `
 <p>Lớp: ${item.className}</p>
 
 <p>Thời gian:
-${item.submittedAt}</p>
+${
+new Date(
+item.submittedAt
+).toLocaleString()
+}
+</p>
 
 ${answersHTML}
 
