@@ -343,6 +343,52 @@ NỘP KHẢO SÁT
 
 <div id="popup" class="popup"></div>
 
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyB7UOCfnM3Y1MPDUv6Q5vAXMwokGV5lMKM",
+
+authDomain: "khaosat-stem.firebaseapp.com",
+
+projectId: "khaosat-stem",
+
+storageBucket: "khaosat-stem.firebasestorage.app",
+
+messagingSenderId: "985737529748",
+
+appId: "1:985737529748:web:5aee9dc96980f7c306e781"
+
+};
+
+/* INIT */
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+/* GLOBAL */
+
+window.db = db;
+window.collection = collection;
+window.addDoc = addDoc;
+
+</script>
+
 <script src="khaosat.js"></script>
 
 </body>
