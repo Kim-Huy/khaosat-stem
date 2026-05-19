@@ -430,6 +430,7 @@ localStorage.getItem(
 || '[]');
 
 let unseenCount = 0;
+let firstLoadDone = false;
 
 let loadedIds = [];
 
@@ -438,6 +439,8 @@ let loadedIds = [];
 onSnapshot(q,(snapshot)=>{
 
 container.innerHTML='';
+
+unseenCount = 0;
 
 snapshot.forEach((doc)=>{
 
@@ -463,6 +466,8 @@ unseenCount++;
 });
 
 updateNotice();
+
+firstLoadDone = true;
 
 });
 
@@ -518,18 +523,18 @@ if(
 seenPosts.push(docId);
 
 localStorage.setItem(
+
 'seenPosts',
+
 JSON.stringify(
 seenPosts
 )
+
 );
 
-unseenCount--;
-
-updateNotice();
 }
 
-/* CHẤM XANH */
+/* UPDATE */
 
 dot.classList.remove(
 'unread'
@@ -539,7 +544,14 @@ dot.classList.add(
 'read'
 );
 
-if(box.style.display==='none'){
+/* KIỂM TRA */
+
+const isHidden =
+
+window.getComputedStyle(box)
+.display === 'none';
+
+if(isHidden){
 
 box.style.display='block';
 
@@ -551,8 +563,18 @@ box.style.display='none';
 
 button.innerText='Xem đáp án';
 }
-}
 
+/* ĐẾM LẠI */
+
+unseenCount = document
+.querySelectorAll(
+'.statusDot.unread'
+)
+.length;
+
+updateNotice();
+
+}
 /* EXPORT */
 
 window.exportCard =
