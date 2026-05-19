@@ -13,6 +13,7 @@ content="width=device-width, initial-scale=1.0">
 <style>
 
 /* 1. Định dạng riêng cho body - Không viết lồng bất cứ thứ gì vào đây */
+/* 1. Định dạng riêng cho body - Không viết lồng bất cứ thứ gì vào đây */
 body {
     margin: 0;
     padding: 20px;
@@ -21,14 +22,12 @@ body {
     color: white;
 }
 
-/* 2. Định dạng riêng cho brand - Đảm bảo dính vào nền, cuộn là mất */
-/* BRAND - Đưa về block tự nhiên để xếp chồng theo chiều dọc */
+/* 2. Định dạng riêng cho brand - Nằm ở góc trái tự nhiên, không dùng absolute */
 .brand {
     display: flex;
     align-items: center;
-    justify-content: center; /* Căn giữa logo và chữ cho đẹp trên điện thoại */
     gap: 12px;
-    margin: 20px auto 10px auto; /* Tạo khoảng cách trên dưới thoáng đãng */
+    margin: 15px 0 20px 20px; /* Căn lề trái 20px cho đồng bộ trang thành viên */
     background: rgba(255, 255, 255, 0.06);
     padding: 10px 18px;
     border-radius: 18px;
@@ -39,7 +38,7 @@ body {
 }
 
 .brand img {
-    height: 45px; /* Giảm nhẹ một chút cho thanh thoát */
+    height: 52px; /* Trả về kích thước 52px rõ nét */
     width: auto;
     object-fit: contain;
 }
@@ -52,14 +51,34 @@ body {
     text-transform: uppercase;
 }
 
-/* Tiêu đề h1 - Lúc này không sợ đè nữa nên chỉ cần margin nhỏ */
-h1 {
-    text-align: center;
-    margin-top: 15px; 
-    margin-bottom: 30px;
-    font-size: 26px; /* Thu nhỏ một chút trên điện thoại cho đỡ vỡ dòng */
+/* CHÈN BƯỚC 2: Định dạng cho hộp đếm tổng số bài nằm bên góc phải */
+.total-box {
+    position: absolute;
+    top: 15px;
+    right: 20px; /* Ghìm sát lề phải */
+    background: rgba(255, 255, 255, 0.06);
+    padding: 10px 16px; /* Nhỏ gọn bằng hộp thông báo */
+    border-radius: 14px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    font-size: 15px; /* Cỡ chữ bằng hộp thông báo */
+    font-weight: bold;
+    color: #cbd5e1; 
+    z-index: 10;
 }
 
+#totalCount {
+    color: #60a5fa; /* Số đếm màu xanh dương sáng */
+    margin-left: 4px;
+}
+
+/* Tiêu đề h1 - Nằm dưới logo, tự động né không bao giờ bị đè */
+h1 {
+    text-align: center;
+    margin-top: 10px; 
+    margin-bottom: 30px;
+}
 /* NOTICE */
 
 #noticeBox{
@@ -341,6 +360,11 @@ white-space:pre-wrap;
     <img src="https://github.com/Kim-Huy/khaosat-stem/blob/main/logo.png/logo.png?raw=true" alt="Logo KTH">
     <span class="brandText">KIM TRA HAI HUY</span>
 </div>
+
+<div class="total-box">
+    Tổng số bài: <span id="totalCount">0</span>
+</div>
+
 <h1>ADMIN KHẢO SÁT STEM</h1>
 
 <div id="noticeBox"></div>
@@ -466,39 +490,34 @@ let loadedIds = [];
 
 /* REALTIME */
 
-onSnapshot(q,(snapshot)=>{
+/* REALTIME */
 
-container.innerHTML='';
+onSnapshot(q, (snapshot) => {
 
-unseenCount = 0;
+    container.innerHTML = '';
+    unseenCount = 0;
 
-snapshot.forEach((doc)=>{
+    // CHÈN DÒNG NÀY: Tự động đếm tổng số bài trên Firebase và cập nhật ngay vào giao diện góc phải
+    if (document.getElementById('totalCount')) {
+        document.getElementById('totalCount').innerText = snapshot.size;
+    }
 
-const item = doc.data();
+    snapshot.forEach((doc) => {
+        const item = doc.data();
+        item.docId = doc.id;
+        loadedIds.push(doc.id);
 
-item.docId = doc.id;
+        const card = createCard(item);
+        container.appendChild(card);
 
-loadedIds.push(doc.id);
+        /* CHƯA XEM */
+        if (!seenPosts.includes(doc.id)) {
+            unseenCount++;
+        }
+    });
 
-const card =
-createCard(item);
-
-container.appendChild(card);
-
-/* CHƯA XEM */
-
-if(
-!seenPosts.includes(doc.id)
-){
-
-unseenCount++;
-}
-});
-
-updateNotice();
-
-firstLoadDone = true;
-
+    updateNotice();
+    firstLoadDone = true;
 });
 
 /* NOTICE */
