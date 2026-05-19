@@ -97,6 +97,8 @@ cursor:pointer;
 
 margin-top:10px;
 
+margin-right:10px;
+
 }
 
 button:hover{
@@ -140,6 +142,9 @@ color:#d1d5db;
 white-space:pre-wrap;
 
 }
+
+/* STATUS DOT */
+
 .statusDot{
 
 width:18px;
@@ -174,11 +179,10 @@ box-shadow:0 0 15px #00ff66;
 
 }
 
-
 </style>
 
 </head>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 <body>
 
 <h1>ADMIN KHẢO SÁT STEM</h1>
@@ -363,11 +367,16 @@ window.toggleAnswers =
 function(button){
 
 const box =
-button.nextElementSibling
-.nextElementSibling;
+button.parentElement
+.querySelector(
+'.answersContainer'
+);
 
 const dot =
-button.nextElementSibling;
+button.parentElement
+.querySelector(
+'.statusDot'
+);
 
 if(box.style.display==='none'){
 
@@ -375,7 +384,7 @@ box.style.display='block';
 
 button.innerText='Ẩn đáp án';
 
-/* ĐÁNH DẤU ĐÃ XEM */
+/* ĐÃ XEM */
 
 dot.classList.remove(
 'unread'
@@ -391,6 +400,30 @@ box.style.display='none';
 
 button.innerText='Xem đáp án';
 }
+}
+
+/* EXPORT IMAGE */
+
+window.exportCard =
+async function(button){
+
+const card =
+button.closest('.card');
+
+const canvas =
+await html2canvas(card);
+
+const link =
+document.createElement('a');
+
+link.download =
+'khao-sat-stem.png';
+
+link.href =
+canvas.toDataURL();
+
+link.click();
+
 }
 
 /* CREATE CARD */
@@ -462,6 +495,8 @@ wrapper.className='card';
 
 wrapper.innerHTML = `
 
+<span class="statusDot unread"></span>
+
 <h2>${item.name}</h2>
 
 <p>Lớp: ${item.className}</p>
@@ -486,10 +521,6 @@ Xuất ảnh
 
 </button>
 
-<span class="statusDot unread">
-
-</span>
-
 <div class="answersContainer">
 
 ${answersHTML}
@@ -509,28 +540,10 @@ updateNotice();
 
 return wrapper;
 }
-window.exportCard =
-async function(button){
 
-const card =
-button.closest('.card');
-
-const canvas =
-await html2canvas(card);
-
-const link =
-document.createElement('a');
-
-link.download =
-'khao-sat-stem.png';
-
-link.href =
-canvas.toDataURL();
-
-link.click();
-
-}
 </script>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 </body>
 
