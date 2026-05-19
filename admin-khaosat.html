@@ -22,24 +22,24 @@ body {
 }
 
 /* 2. Định dạng riêng cho brand - Đảm bảo dính vào nền, cuộn là mất */
+/* BRAND - Đưa về block tự nhiên để xếp chồng theo chiều dọc */
 .brand {
-    position: absolute; /* Tuyệt đối theo góc trên cùng của trang web */
-    top: 15px;
-    left: 20px;
     display: flex;
     align-items: center;
+    justify-content: center; /* Căn giữa logo và chữ cho đẹp trên điện thoại */
     gap: 12px;
-    z-index: 10; 
+    margin: 20px auto 10px auto; /* Tạo khoảng cách trên dưới thoáng đãng */
     background: rgba(255, 255, 255, 0.06);
     padding: 10px 18px;
     border-radius: 18px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    width: fit-content; /* Co giãn vừa vặn với nội dung logo + chữ */
 }
 
 .brand img {
-    height: 52px;
+    height: 45px; /* Giảm nhẹ một chút cho thanh thoát */
     width: auto;
     object-fit: contain;
 }
@@ -52,11 +52,12 @@ body {
     text-transform: uppercase;
 }
 
+/* Tiêu đề h1 - Lúc này không sợ đè nữa nên chỉ cần margin nhỏ */
 h1 {
     text-align: center;
-    /* Tăng margin-top lên 100px để đẩy tiêu đề xuống dưới, nhường chỗ cho logo */
-    margin-top: 100px; 
+    margin-top: 15px; 
     margin-bottom: 30px;
+    font-size: 26px; /* Thu nhỏ một chút trên điện thoại cho đỡ vỡ dòng */
 }
 
 /* NOTICE */
