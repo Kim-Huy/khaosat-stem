@@ -8,63 +8,31 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>Admin STEM</title>
+<title>ADMIN KHẢO SÁT STEM</title>
 
 <style>
 
 body{
 
-    font-family:Arial;
+margin:0;
+padding:20px;
 
-    background:#020617;
+background:#050816;
 
-    color:white;
+font-family:Arial;
 
-    padding:30px;
+color:white;
+
 }
 
 h1{
 
-    text-align:center;
+text-align:center;
 
-    color:#60a5fa;
+margin-bottom:30px;
 
-    margin-bottom:30px;
 }
 
-.card{
-
-    background:#111827;
-
-    padding:25px;
-
-    border-radius:16px;
-
-    margin-bottom:30px;
-}
-
-.answer{
-
-    background:#1e293b;
-
-    padding:15px;
-
-    border-radius:12px;
-
-    margin-top:15px;
-}
-
-.questionTitle{
-
-    color:#93c5fd;
-
-    margin-bottom:8px;
-}
-
-.answerText{
-
-    color:#e2e8f0;
-}
 #noticeBox{
 
 position:sticky;
@@ -75,13 +43,11 @@ z-index:999;
 
 background:#111827;
 
-color:white;
+padding:15px;
 
-padding:12px;
+border-radius:15px;
 
-border-radius:12px;
-
-margin-bottom:15px;
+margin-bottom:20px;
 
 font-weight:bold;
 
@@ -91,13 +57,88 @@ backdrop-filter:blur(10px);
 
 }
 
+.card{
+
+background:rgba(255,255,255,0.08);
+
+padding:20px;
+
+margin-bottom:20px;
+
+border-radius:20px;
+
+backdrop-filter:blur(10px);
+
+border:1px solid rgba(255,255,255,0.1);
+
+}
+
+.card h2{
+
+margin-top:0;
+
+}
+
+button{
+
+padding:10px 15px;
+
+border:none;
+
+border-radius:10px;
+
+background:#3b82f6;
+
+color:white;
+
+cursor:pointer;
+
+margin-top:10px;
+
+}
+
+button:hover{
+
+opacity:0.9;
+
+}
+
 .answersContainer{
 
 display:none;
 
-margin-top:15px;
+margin-top:20px;
 
 }
+
+.answer{
+
+margin-bottom:18px;
+
+padding:12px;
+
+background:rgba(255,255,255,0.05);
+
+border-radius:12px;
+
+}
+
+.questionTitle{
+
+font-weight:bold;
+
+margin-bottom:8px;
+
+}
+
+.answerText{
+
+color:#d1d5db;
+
+white-space:pre-wrap;
+
+}
+
 </style>
 
 </head>
@@ -106,17 +147,14 @@ margin-top:15px;
 
 <h1>ADMIN KHẢO SÁT STEM</h1>
 
-<div id="noticeBox">
-
-0 bài chưa xem
-
-</div>
+<div id="noticeBox"></div>
 
 <div id="data"></div>
 
 <script type="module">
 
 import { initializeApp }
+
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
@@ -128,6 +166,7 @@ query,
 orderBy
 
 }
+
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
 /* FIREBASE */
@@ -304,7 +343,7 @@ button.innerText='Xem đáp án';
 }
 }
 
-/* CARD */
+/* CREATE CARD */
 
 function createCard(item){
 
@@ -391,8 +430,7 @@ Xem đáp án
 
 </button>
 
-<div class="answersContainer"
-style="display:none;">
+<div class="answersContainer">
 
 ${answersHTML}
 
@@ -415,4 +453,5 @@ return wrapper;
 </script>
 
 </body>
+
 </html>
