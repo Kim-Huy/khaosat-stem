@@ -205,11 +205,11 @@ left:-99999px;
 
 top:0;
 
-width:1000px;
+width:2600px;
 
-background:white;
+background:#0b1120;
 
-color:black;
+color:white;
 
 padding:40px;
 
@@ -217,37 +217,58 @@ font-family:Arial;
 
 }
 
-.exportTitle{
+/* HEADER */
+
+.exportHeader{
 
 text-align:center;
 
-font-size:35px;
+margin-bottom:40px;
 
-font-weight:bold;
+}
 
-margin-bottom:20px;
+.exportHeader h1{
+
+font-size:50px;
+
+margin-bottom:15px;
 
 }
 
 .exportInfo{
 
-margin-bottom:30px;
+font-size:24px;
 
-font-size:20px;
-
-line-height:1.8;
+line-height:2;
 
 }
 
+/* GRID */
+
+.exportGrid{
+
+display:grid;
+
+grid-template-columns:
+1fr 1fr 1fr;
+
+gap:25px;
+
+}
+
+/* BOX */
+
 .exportQuestion{
 
-margin-bottom:20px;
+background:rgba(255,255,255,0.08);
 
-padding:15px;
+padding:20px;
 
-border:1px solid #ccc;
+border-radius:18px;
 
-border-radius:10px;
+border:1px solid rgba(255,255,255,0.1);
+
+min-height:180px;
 
 }
 
@@ -255,15 +276,21 @@ border-radius:10px;
 
 margin-top:0;
 
-font-size:22px;
+font-size:24px;
+
+line-height:1.5;
 
 }
 
 .exportQuestion p{
 
-font-size:19px;
+font-size:22px;
 
-line-height:1.6;
+line-height:1.7;
+
+color:#d1d5db;
+
+white-space:pre-wrap;
 
 }
 
@@ -451,7 +478,7 @@ box.style.display='none';
 }
 }
 
-/* TOGGLE ANSWERS */
+/* TOGGLE */
 
 window.toggleAnswers =
 function(button){
@@ -474,8 +501,6 @@ if(box.style.display==='none'){
 box.style.display='block';
 
 button.innerText='Ẩn đáp án';
-
-/* ĐÃ XEM */
 
 dot.classList.remove(
 'unread'
@@ -513,18 +538,24 @@ document.getElementById(
 
 let html = `
 
-<div class="exportTitle">
+<div class="exportHeader">
+
+<h1>
 
 PHIẾU KHẢO SÁT STEM
 
-</div>
+</h1>
 
 <div class="exportInfo">
 
-<b>Họ tên:</b> ${item.name}
+<b>Họ tên:</b>
+${item.name}
+
 <br>
 
-<b>Lớp:</b> ${item.className}
+<b>Lớp:</b>
+${item.className}
+
 <br>
 
 <b>Thời gian:</b>
@@ -534,6 +565,10 @@ item.submittedAt
 ).toLocaleString()}
 
 </div>
+
+</div>
+
+<div class="exportGrid">
 `;
 
 for(let i=1;i<=35;i++){
@@ -573,6 +608,8 @@ item.answers[`q${i}`]
 `;
 }
 
+html += `</div>`;
+
 exportBox.innerHTML = html;
 
 const canvas =
@@ -611,7 +648,8 @@ answersHTML += `
 
 <div class="questionTitle">
 
-Câu ${i}: ${questionTexts[i-1]}
+Câu ${i}:
+${questionTexts[i-1]}
 
 </div>
 
@@ -639,7 +677,8 @@ answersHTML += `
 
 <div class="questionTitle">
 
-Câu ${i}: ${questionTexts[i-1]}
+Câu ${i}:
+${questionTexts[i-1]}
 
 </div>
 
