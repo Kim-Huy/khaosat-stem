@@ -205,13 +205,19 @@ left:-99999px;
 
 top:0;
 
-width:2600px;
+width:4200px;
 
-background:#0b1120;
+background:
+linear-gradient(
+135deg,
+#020617,
+#0f172a,
+#111827
+);
 
 color:white;
 
-padding:40px;
+padding:50px;
 
 font-family:Arial;
 
@@ -223,21 +229,21 @@ font-family:Arial;
 
 text-align:center;
 
-margin-bottom:40px;
+margin-bottom:50px;
 
 }
 
 .exportHeader h1{
 
-font-size:50px;
+font-size:70px;
 
-margin-bottom:15px;
+margin-bottom:20px;
 
 }
 
 .exportInfo{
 
-font-size:24px;
+font-size:32px;
 
 line-height:2;
 
@@ -250,9 +256,9 @@ line-height:2;
 display:grid;
 
 grid-template-columns:
-1fr 1fr 1fr;
+1fr 1fr 1fr 1fr;
 
-gap:25px;
+gap:30px;
 
 }
 
@@ -262,13 +268,18 @@ gap:25px;
 
 background:rgba(255,255,255,0.08);
 
-padding:20px;
+padding:25px;
 
-border-radius:18px;
+border-radius:20px;
 
-border:1px solid rgba(255,255,255,0.1);
+border:1px solid rgba(255,255,255,0.15);
 
-min-height:180px;
+backdrop-filter:blur(10px);
+
+min-height:220px;
+
+box-shadow:
+0 0 20px rgba(0,0,0,0.3);
 
 }
 
@@ -276,17 +287,17 @@ min-height:180px;
 
 margin-top:0;
 
-font-size:24px;
+font-size:28px;
 
-line-height:1.5;
+line-height:1.6;
 
 }
 
 .exportQuestion p{
 
-font-size:22px;
+font-size:25px;
 
-line-height:1.7;
+line-height:1.8;
 
 color:#d1d5db;
 
@@ -396,6 +407,8 @@ const questionTexts = [
 const container =
 document.getElementById('data');
 
+/* FIRESTORE QUERY */
+
 const q = query(
 
 collection(db,"submissions"),
@@ -407,7 +420,14 @@ orderBy(
 
 );
 
-let firstLoad = true;
+/* ĐÃ XEM */
+
+let seenPosts =
+JSON.parse(
+localStorage.getItem(
+'seenPosts'
+)
+|| '[]');
 
 let unseenCount = 0;
 
@@ -417,42 +437,32 @@ let loadedIds = [];
 
 onSnapshot(q,(snapshot)=>{
 
-snapshot.docChanges().forEach((change)=>{
+container.innerHTML='';
 
-if(change.type==="added"){
-
-const doc = change.doc;
-
-if(
-loadedIds.includes(doc.id)
-){
-
-return;
-}
-
-loadedIds.push(doc.id);
+snapshot.forEach((doc)=>{
 
 const item = doc.data();
+
+item.docId = doc.id;
+
+loadedIds.push(doc.id);
 
 const card =
 createCard(item);
 
-if(firstLoad){
-
 container.appendChild(card);
 
-}else{
+/* CHƯA XEM */
 
-container.prepend(card);
+if(
+!seenPosts.includes(doc.id)
+){
 
 unseenCount++;
-
-updateNotice();
-}
 }
 });
 
-firstLoad = false;
+updateNotice();
 
 });
 
@@ -496,11 +506,30 @@ card.querySelector(
 '.statusDot'
 );
 
-if(box.style.display==='none'){
+const docId =
+card.dataset.id;
 
-box.style.display='block';
+/* ĐÁNH DẤU ĐÃ XEM */
 
-button.innerText='Ẩn đáp án';
+if(
+!seenPosts.includes(docId)
+){
+
+seenPosts.push(docId);
+
+localStorage.setItem(
+'seenPosts',
+JSON.stringify(
+seenPosts
+)
+);
+
+unseenCount--;
+
+updateNotice();
+}
+
+/* CHẤM XANH */
 
 dot.classList.remove(
 'unread'
@@ -510,6 +539,12 @@ dot.classList.add(
 'read'
 );
 
+if(box.style.display==='none'){
+
+box.style.display='block';
+
+button.innerText='Ẩn đáp án';
+
 }else{
 
 box.style.display='none';
@@ -518,7 +553,7 @@ button.innerText='Xem đáp án';
 }
 }
 
-/* EXPORT IMAGE */
+/* EXPORT */
 
 window.exportCard =
 async function(button){
@@ -615,7 +650,7 @@ exportBox.innerHTML = html;
 const canvas =
 await html2canvas(exportBox,{
 
-scale:2
+scale:1.5
 
 });
 
@@ -626,7 +661,9 @@ link.download =
 `${item.name}-khao-sat.png`;
 
 link.href =
-canvas.toDataURL();
+canvas.toDataURL(
+'image/png'
+);
 
 link.click();
 
@@ -696,6 +733,15 @@ item.answers[`q${i}`]
 `;
 }
 
+/* STATUS */
+
+const statusClass =
+seenPosts.includes(item.docId)
+
+? 'read'
+
+: 'unread';
+
 const wrapper =
 document.createElement('div');
 
@@ -704,9 +750,12 @@ wrapper.className='card';
 wrapper.dataset.item =
 JSON.stringify(item);
 
+wrapper.dataset.id =
+item.docId;
+
 wrapper.innerHTML = `
 
-<span class="statusDot unread"></span>
+<span class="statusDot ${statusClass}"></span>
 
 <h2>${item.name}</h2>
 
@@ -743,16 +792,6 @@ ${answersHTML}
 
 </div>
 `;
-
-wrapper.addEventListener('click',()=>{
-
-if(unseenCount>0){
-
-unseenCount--;
-
-updateNotice();
-}
-});
 
 return wrapper;
 }
