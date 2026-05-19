@@ -33,6 +33,8 @@ margin-bottom:30px;
 
 }
 
+/* NOTICE */
+
 #noticeBox{
 
 position:sticky;
@@ -57,6 +59,8 @@ backdrop-filter:blur(10px);
 
 }
 
+/* CARD */
+
 .card{
 
 background:rgba(255,255,255,0.08);
@@ -79,7 +83,11 @@ position:relative;
 
 margin-top:0;
 
+font-size:30px;
+
 }
+
+/* BUTTON */
 
 button{
 
@@ -99,6 +107,8 @@ margin-top:10px;
 
 margin-right:10px;
 
+font-size:15px;
+
 }
 
 button:hover{
@@ -106,6 +116,8 @@ button:hover{
 opacity:0.9;
 
 }
+
+/* ANSWERS */
 
 .answersContainer{
 
@@ -119,7 +131,7 @@ margin-top:20px;
 
 margin-bottom:18px;
 
-padding:12px;
+padding:15px;
 
 background:rgba(255,255,255,0.05);
 
@@ -133,6 +145,8 @@ font-weight:bold;
 
 margin-bottom:8px;
 
+font-size:17px;
+
 }
 
 .answerText{
@@ -140,6 +154,8 @@ margin-bottom:8px;
 color:#d1d5db;
 
 white-space:pre-wrap;
+
+font-size:16px;
 
 }
 
@@ -179,6 +195,78 @@ box-shadow:0 0 15px #00ff66;
 
 }
 
+/* EXPORT TEMPLATE */
+
+#exportTemplate{
+
+position:absolute;
+
+left:-99999px;
+
+top:0;
+
+width:1000px;
+
+background:white;
+
+color:black;
+
+padding:40px;
+
+font-family:Arial;
+
+}
+
+.exportTitle{
+
+text-align:center;
+
+font-size:35px;
+
+font-weight:bold;
+
+margin-bottom:20px;
+
+}
+
+.exportInfo{
+
+margin-bottom:30px;
+
+font-size:20px;
+
+line-height:1.8;
+
+}
+
+.exportQuestion{
+
+margin-bottom:20px;
+
+padding:15px;
+
+border:1px solid #ccc;
+
+border-radius:10px;
+
+}
+
+.exportQuestion h3{
+
+margin-top:0;
+
+font-size:22px;
+
+}
+
+.exportQuestion p{
+
+font-size:19px;
+
+line-height:1.6;
+
+}
+
 </style>
 
 </head>
@@ -190,6 +278,8 @@ box-shadow:0 0 15px #00ff66;
 <div id="noticeBox"></div>
 
 <div id="data"></div>
+
+<div id="exportTemplate"></div>
 
 <script type="module">
 
@@ -361,20 +451,21 @@ box.style.display='none';
 }
 }
 
-/* TOGGLE */
+/* TOGGLE ANSWERS */
 
 window.toggleAnswers =
 function(button){
 
+const card =
+button.closest('.card');
+
 const box =
-button.parentElement
-.querySelector(
+card.querySelector(
 '.answersContainer'
 );
 
 const dot =
-button.parentElement
-.querySelector(
+card.querySelector(
 '.statusDot'
 );
 
@@ -410,14 +501,92 @@ async function(button){
 const card =
 button.closest('.card');
 
+const item =
+JSON.parse(
+card.dataset.item
+);
+
+const exportBox =
+document.getElementById(
+'exportTemplate'
+);
+
+let html = `
+
+<div class="exportTitle">
+
+PHIẾU KHẢO SÁT STEM
+
+</div>
+
+<div class="exportInfo">
+
+<b>Họ tên:</b> ${item.name}
+<br>
+
+<b>Lớp:</b> ${item.className}
+<br>
+
+<b>Thời gian:</b>
+
+${new Date(
+item.submittedAt
+).toLocaleString()}
+
+</div>
+`;
+
+for(let i=1;i<=35;i++){
+
+html += `
+
+<div class="exportQuestion">
+
+<h3>
+
+Câu ${i}:
+${questionTexts[i-1]}
+
+</h3>
+
+<p>
+
+${
+Array.isArray(
+item.answers[`q${i}`]
+)
+
+? item.answers[`q${i}`]
+.join(', ')
+
+:
+
+item.answers[`q${i}`]
+||
+
+'Không trả lời'
+}
+
+</p>
+
+</div>
+`;
+}
+
+exportBox.innerHTML = html;
+
 const canvas =
-await html2canvas(card);
+await html2canvas(exportBox,{
+
+scale:2
+
+});
 
 const link =
 document.createElement('a');
 
 link.download =
-'khao-sat-stem.png';
+`${item.name}-khao-sat.png`;
 
 link.href =
 canvas.toDataURL();
@@ -493,13 +662,21 @@ document.createElement('div');
 
 wrapper.className='card';
 
+wrapper.dataset.item =
+JSON.stringify(item);
+
 wrapper.innerHTML = `
 
 <span class="statusDot unread"></span>
 
 <h2>${item.name}</h2>
 
-<p>Lớp: ${item.className}</p>
+<p>
+
+<b>Lớp:</b>
+${item.className}
+
+</p>
 
 <p>
 
