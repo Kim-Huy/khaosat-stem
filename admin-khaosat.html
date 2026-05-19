@@ -65,7 +65,39 @@ h1{
 
     color:#e2e8f0;
 }
+#noticeBox{
 
+position:sticky;
+
+top:10px;
+
+z-index:999;
+
+background:#111827;
+
+color:white;
+
+padding:12px;
+
+border-radius:12px;
+
+margin-bottom:15px;
+
+font-weight:bold;
+
+display:none;
+
+backdrop-filter:blur(10px);
+
+}
+
+.answersContainer{
+
+display:none;
+
+margin-top:15px;
+
+}
 </style>
 
 </head>
@@ -73,6 +105,12 @@ h1{
 <body>
 
 <h1>ADMIN KHẢO SÁT STEM</h1>
+
+<div id="noticeBox">
+
+0 bài chưa xem
+
+</div>
 
 <div id="data"></div>
 
@@ -159,8 +197,6 @@ const questionTexts = [
 
 ];
 
-/* REALTIME */
-
 const container =
 document.getElementById('data');
 
@@ -175,13 +211,102 @@ orderBy(
 
 );
 
+let firstLoad = true;
+
+let unseenCount = 0;
+
+let loadedIds = [];
+
+/* REALTIME */
+
 onSnapshot(q,(snapshot)=>{
 
-container.innerHTML='';
+snapshot.docChanges().forEach((change)=>{
 
-snapshot.forEach((doc)=>{
+if(change.type==="added"){
+
+const doc = change.doc;
+
+if(
+loadedIds.includes(doc.id)
+){
+
+return;
+}
+
+loadedIds.push(doc.id);
 
 const item = doc.data();
+
+const card =
+createCard(item);
+
+if(firstLoad){
+
+container.appendChild(card);
+
+}else{
+
+container.prepend(card);
+
+unseenCount++;
+
+updateNotice();
+}
+}
+});
+
+firstLoad = false;
+
+});
+
+/* NOTICE */
+
+function updateNotice(){
+
+const box =
+document.getElementById(
+'noticeBox'
+);
+
+if(unseenCount>0){
+
+box.style.display='block';
+
+box.innerText=
+`${unseenCount} bài chưa xem`;
+
+}else{
+
+box.style.display='none';
+}
+}
+
+/* TOGGLE */
+
+window.toggleAnswers =
+function(button){
+
+const box =
+button.nextElementSibling;
+
+if(box.style.display==='none'){
+
+box.style.display='block';
+
+button.innerText='Ẩn đáp án';
+
+}else{
+
+box.style.display='none';
+
+button.innerText='Xem đáp án';
+}
+}
+
+/* CARD */
+
+function createCard(item){
 
 let answersHTML='';
 
@@ -241,30 +366,51 @@ item.answers[`q${i}`]
 `;
 }
 
-container.innerHTML += `
+const wrapper =
+document.createElement('div');
 
-<div class="card">
+wrapper.className='card';
+
+wrapper.innerHTML = `
 
 <h2>${item.name}</h2>
 
 <p>Lớp: ${item.className}</p>
 
-<p>Thời gian:
-${
-new Date(
+<p>
+
+${new Date(
 item.submittedAt
-).toLocaleString()
-}
+).toLocaleString()}
+
 </p>
+
+<button onclick="toggleAnswers(this)">
+
+Xem đáp án
+
+</button>
+
+<div class="answersContainer"
+style="display:none;">
 
 ${answersHTML}
 
 </div>
 `;
 
+wrapper.addEventListener('click',()=>{
+
+if(unseenCount>0){
+
+unseenCount--;
+
+updateNotice();
+}
 });
 
-});
+return wrapper;
+}
 
 </script>
 
