@@ -13,32 +13,32 @@ content="width=device-width, initial-scale=1.0">
 <style>
 
 /* 1. Định dạng riêng cho body - Không viết lồng bất cứ thứ gì vào đây */
-/* 1. Định dạng riêng cho body - Không viết lồng bất cứ thứ gì vào đây */
 body {
     margin: 0;
     padding: 20px;
     background: #050816;
     font-family: Arial;
     color: white;
+    position: relative; /* Thêm dòng này để làm gốc tọa độ chuẩn cho hộp góc phải */
 }
 
-/* 2. Định dạng riêng cho brand - Nằm ở góc trái tự nhiên, không dùng absolute */
+/* 2. Định dạng riêng cho brand - Nằm ở góc trái tự nhiên */
 .brand {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin: 15px 0 20px 20px; /* Căn lề trái 20px cho đồng bộ trang thành viên */
+    margin: 15px 0 20px 20px; /* Đẩy lề trái 20px để cố định góc trái */
     background: rgba(255, 255, 255, 0.06);
     padding: 10px 18px;
     border-radius: 18px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    width: fit-content; /* Co giãn vừa vặn với nội dung logo + chữ */
+    width: fit-content; 
 }
 
 .brand img {
-    height: 52px; /* Trả về kích thước 52px rõ nét */
+    height: 52px; 
     width: auto;
     object-fit: contain;
 }
@@ -51,32 +51,32 @@ body {
     text-transform: uppercase;
 }
 
-/* CHÈN BƯỚC 2: Định dạng cho hộp đếm tổng số bài nằm bên góc phải */
+/* 3. Định dạng hộp tổng số bài cố định chắc chắn ở góc phải */
 .total-box {
-    position: absolute;
-    top: 15px;
-    right: 20px; /* Ghìm sát lề phải */
+    position: absolute; /* Định vị tuyệt đối */
+    top: 35px;         /* Căn chỉnh chiều cao bằng với logo bên trái */
+    right: 20px;        /* Ghìm chặt sát lề phải */
     background: rgba(255, 255, 255, 0.06);
-    padding: 10px 16px; /* Nhỏ gọn bằng hộp thông báo */
+    padding: 10px 16px; 
     border-radius: 14px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    font-size: 15px; /* Cỡ chữ bằng hộp thông báo */
+    font-size: 15px; 
     font-weight: bold;
     color: #cbd5e1; 
-    z-index: 10;
+    z-index: 999;       /* Đảm bảo luôn nổi lên trên, không bị che khuất */
 }
 
 #totalCount {
-    color: #60a5fa; /* Số đếm màu xanh dương sáng */
+    color: #60a5fa; 
     margin-left: 4px;
 }
 
-/* Tiêu đề h1 - Nằm dưới logo, tự động né không bao giờ bị đè */
+/* Tiêu đề h1 - Nằm ở giữa trang tự nhiên */
 h1 {
     text-align: center;
-    margin-top: 10px; 
+    margin-top: 20px; 
     margin-bottom: 30px;
 }
 /* NOTICE */
