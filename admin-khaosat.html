@@ -138,7 +138,35 @@ color:#d1d5db;
 white-space:pre-wrap;
 
 }
+.statusDot{
 
+width:14px;
+
+height:14px;
+
+border-radius:50%;
+
+display:inline-block;
+
+margin-left:10px;
+
+}
+
+.unread{
+
+background:red;
+
+box-shadow:0 0 10px red;
+
+}
+
+.read{
+
+background:lime;
+
+box-shadow:0 0 10px lime;
+
+}
 </style>
 
 </head>
@@ -327,6 +355,10 @@ window.toggleAnswers =
 function(button){
 
 const box =
+button.nextElementSibling
+.nextElementSibling;
+
+const dot =
 button.nextElementSibling;
 
 if(box.style.display==='none'){
@@ -334,6 +366,16 @@ if(box.style.display==='none'){
 box.style.display='block';
 
 button.innerText='Ẩn đáp án';
+
+/* ĐÁNH DẤU ĐÃ XEM */
+
+dot.classList.remove(
+'unread'
+);
+
+dot.classList.add(
+'read'
+);
 
 }else{
 
@@ -429,6 +471,10 @@ item.submittedAt
 Xem đáp án
 
 </button>
+
+<span class="statusDot unread">
+
+</span>
 
 <div class="answersContainer">
 
