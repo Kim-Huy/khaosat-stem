@@ -71,6 +71,8 @@ backdrop-filter:blur(10px);
 
 border:1px solid rgba(255,255,255,0.1);
 
+position:relative;
+
 }
 
 .card h2{
@@ -140,37 +142,43 @@ white-space:pre-wrap;
 }
 .statusDot{
 
-width:14px;
+width:18px;
 
-height:14px;
+height:18px;
 
 border-radius:50%;
 
-display:inline-block;
+position:absolute;
 
-margin-left:10px;
+top:20px;
+
+right:20px;
+
+display:block;
 
 }
 
 .unread{
 
-background:red;
+background:#ff0000;
 
-box-shadow:0 0 10px red;
+box-shadow:0 0 15px #ff0000;
 
 }
 
 .read{
 
-background:lime;
+background:#00ff66;
 
-box-shadow:0 0 10px lime;
+box-shadow:0 0 15px #00ff66;
 
 }
+
+
 </style>
 
 </head>
-
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <body>
 
 <h1>ADMIN KHẢO SÁT STEM</h1>
@@ -472,6 +480,12 @@ Xem đáp án
 
 </button>
 
+<button onclick="exportCard(this)">
+
+Xuất ảnh
+
+</button>
+
 <span class="statusDot unread">
 
 </span>
@@ -495,7 +509,27 @@ updateNotice();
 
 return wrapper;
 }
+window.exportCard =
+async function(button){
 
+const card =
+button.closest('.card');
+
+const canvas =
+await html2canvas(card);
+
+const link =
+document.createElement('a');
+
+link.download =
+'khao-sat-stem.png';
+
+link.href =
+canvas.toDataURL();
+
+link.click();
+
+}
 </script>
 
 </body>
